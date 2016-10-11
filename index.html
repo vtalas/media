@@ -1,10 +1,70 @@
+<!DOCTYPE html>
 <html>
+
 <head>
+
+    <script src="libs/jquery.min.js"></script>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0
+        }
+
+        .device-info, .log {
+            border: 1px solid #717276;
+            margin: 10px;
+            padding: 20px;
+        }
+
+        h5 {
+            margin: 10px
+        }
+
+        .media-red {
+            color: red;
+        }
+
+        .media-blue {
+            color: blue;
+        }
+
+    </style>
 </head>
 
-<body>
 
-rappid app
+<body>
+<h5>Queries:</h5>
+<div class="device-info"></div>
+<h5>Device info:</h5>
+<div class="log"></div>
+
+<script>
+
+    var mm = {};
+
+    $(document).ready(function() {
+        var steps = [
+            { maxWidth: 500, className: 'media-red', minWidth: 0 },
+            { maxWidth: 1000, className: 'media-blue', minWidth: 501 }
+        ];
+
+        mm.Media.initialize({
+            steps: steps,
+            onChange: function(step, media) {
+                $('body').toggleClass(step.className, media.matches)
+            },
+            log: Logger.log
+        });
+
+        Logger.logBasicInfo();
+    })
+
+</script>
+
+<script type="text/javascript" src="media.js"></script>
+<script type="text/javascript" src="logHelper.js"></script>
+
 </body>
 
 </html>
