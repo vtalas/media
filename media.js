@@ -3,23 +3,34 @@ mm.Media = {
     initialize: function(options) {
 
         this.options = options || {};
+        this.listeners = [];
+
         var opt = this.options;
 
         var steps = opt.steps;
-        opt.onChange = opt.onChange || function() {};
-        opt.log = opt.log || function() {};
+        opt.onChange = opt.onChange || function() {
+            };
+        opt.log = opt.log || function() {
+            };
 
         var toMediaString = function(step, ratio) {
             var mediaString = [];
 
-            if (step.minWidth) {
-                mediaString.push('(min-width: ' + (step.minWidth * Math.ceil(ratio)) + 'px)')
-            }
+            _.each(step, function(value, key) {
+                if (key !== 'className') {
+                    mediaString.push('(' + _.kebabCase(key) + ': ' + value + 'px)')
+                }
+            });
 
-            if (step.maxWidth) {
-                mediaString.push('(max-width: ' + (step.maxWidth * Math.ceil(ratio)) + 'px)')
-            }
+            // if (step.minWidth) {
+            //     mediaString.push('(min-width: ' + (step.minWidth * Math.ceil(ratio)) + 'px)')
+            // }
+            //
+            // if (step.maxWidth) {
+            //     mediaString.push('(max-width: ' + (step.maxWidth * Math.ceil(ratio)) + 'px)')
+            // }
 
+console.log(mediaString);
             return mediaString.join(' and ');
         };
 
@@ -41,15 +52,29 @@ mm.Media = {
 
             this.attach(step, matchMedia);
         }
+        return this;
+
     },
 
     attach: function(step, matchMedia) {
 
         var mediaChanged = this.options.onChange;
-
-        matchMedia.addListener(function(media) {
+        var handler = function(media) {
+            console.log(media.media);
             mediaChanged(step, media)
-        });
+        };
+        this.listeners.push({ media: matchMedia, handler: handler });
+        matchMedia.addListener(handler);
+    },
+
+    destroy: function() {
+
+        for (var i = 0; i < this.listeners.length; i++) {
+            var listener = this.listeners[i];
+            console.log(listener.query);
+            listener.media.removeListener(listener.handler);
+        }
     }
+
 };
 

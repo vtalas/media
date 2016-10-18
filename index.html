@@ -4,6 +4,7 @@
 <head>
 
     <script src="libs/jquery.min.js"></script>
+    <script src="libs/index.js"></script>
 
     <style>
         html, body {
@@ -11,7 +12,7 @@
             padding: 0
         }
 
-        .device-info, .log {
+        .device-info, .log, .steps {
             border: 1px solid #717276;
             margin: 10px;
             padding: 20px;
@@ -34,6 +35,13 @@
 
 
 <body>
+<h5>steps</h5>
+<div class="steps">
+
+
+</div>
+
+
 <h5>Queries:</h5>
 <div class="device-info"></div>
 <h5>Device info:</h5>
@@ -42,21 +50,48 @@
 <script>
 
     var mm = {};
+    var media;
 
-    $(document).ready(function() {
-        var steps = [
-            { maxWidth: 500, className: 'media-red', minWidth: 0 },
-            { maxWidth: 1000, className: 'media-blue', minWidth: 501 }
-        ];
+    var steps = [
+//        { maxWidth: 500, className: 'media-red', minWidth: 0 },
+//        { maxWidth: 1000, className: 'media-blue', minWidth: 501 }
+        { maxDeviceWidth: 1000, className: 'media-blue', minDeviceWidth: 501 }
+    ];
 
-        mm.Media.initialize({
+    var render = function(steps) {
+
+        var $steps = $('.steps');
+
+        for (var i = 0; i < steps.length; i++) {
+            var step = steps[i];
+
+            $('<div/>')
+                    .append($('<span/>').text(step.className))
+                    .append($('<input/>').attr({ placeholder: 'minWidth', value: step.minWidth }))
+                    .append($('<input/>').attr({ placeholder: 'maxWidth', value: step.maxWidth }))
+                    .appendTo($steps);
+        }
+
+        $('input').on('change', function() {
+        	media.destroy();
+            createMedia();
+            Logger.logBasicInfo();
+        })
+    };
+
+    var createMedia = function() {
+        media = mm.Media.initialize({
             steps: steps,
             onChange: function(step, media) {
                 $('body').toggleClass(step.className, media.matches)
             },
             log: Logger.log
         });
+    };
 
+    $(document).ready(function() {
+        createMedia();
+        render(steps);
         Logger.logBasicInfo();
     })
 
