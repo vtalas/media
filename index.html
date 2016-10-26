@@ -30,6 +30,21 @@
             color: blue;
         }
 
+        .events {
+            width: 100px;
+            height: 100px;
+
+            background-color: #6cff46;
+            border-radius: 50%;
+        }
+        .eventslog {
+            position: absolute;
+            width: 150px;
+            right: 0;
+            top: 0;
+            border: 1px solid red;
+            height: 100%;
+        }
     </style>
 </head>
 
@@ -46,6 +61,12 @@
 <div class="device-info"></div>
 <h5>Device info:</h5>
 <div class="log"></div>
+
+
+<div class="events"></div>
+<div class="eventslog" >
+
+</div>
 
 <script>
 
@@ -65,11 +86,11 @@
         for (var i = 0; i < steps.length; i++) {
             var step = steps[i];
 
-            $('<div/>')
-                    .append($('<span/>').text(step.className))
-                    .append($('<input/>').attr({ placeholder: 'minWidth', value: step.minWidth }))
-                    .append($('<input/>').attr({ placeholder: 'maxWidth', value: step.maxWidth }))
-                    .appendTo($steps);
+//            $('<div/>')
+//                    .append($('<span/>').text(step.className))
+//                    .append($('<input/>').attr({ placeholder: 'minDeviceWidth', value: step.minWidth }))
+//                    .append($('<input/>').attr({ placeholder: 'maxDeviceWidth', value: step.maxWidth }))
+//                    .appendTo($steps);
         }
 
         $('input').on('change', function() {
@@ -89,14 +110,28 @@
         });
     };
 
+    var cleatButton = function (el) {
+        $("<button/>").text('clear').on('click', function () {
+            Logger.clear(el);
+            cleatButton(el);
+        }).appendTo(el);
+    };
+
     $(document).ready(function() {
         createMedia();
         render(steps);
         Logger.logBasicInfo();
+
+        var eventslog = $('.eventslog');
+        cleatButton(eventslog);
+        events().bindAll($('.events'), function (e) {
+            Logger.log(e.type, eventslog);
+        })
     })
 
 </script>
 
+<script type="text/javascript" src="events.js"></script>
 <script type="text/javascript" src="media.js"></script>
 <script type="text/javascript" src="logHelper.js"></script>
 

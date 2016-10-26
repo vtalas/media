@@ -22,15 +22,6 @@ mm.Media = {
                 }
             });
 
-            // if (step.minWidth) {
-            //     mediaString.push('(min-width: ' + (step.minWidth * Math.ceil(ratio)) + 'px)')
-            // }
-            //
-            // if (step.maxWidth) {
-            //     mediaString.push('(max-width: ' + (step.maxWidth * Math.ceil(ratio)) + 'px)')
-            // }
-
-console.log(mediaString);
             return mediaString.join(' and ');
         };
 

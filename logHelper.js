@@ -37,9 +37,14 @@ var Logger = (function() {
 
 
     return {
+        clear: function (element) {
+            var el = element || $infoConatiner;
+            el.empty();
+            x = 0;
+        },
         logBasicInfo: logBasicInfo,
-        log: function(text) {
-            log(text, $infoConatiner)
+        log: function(text, element) {
+            log(text, element || $infoConatiner)
         }
     };
 }());
