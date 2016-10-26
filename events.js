@@ -9,7 +9,7 @@ events = function () {
             }
         }
 
-        result.push('touchstart', 'touchend', 'touchmove', 'touchcancel');
+        // result.push('touchstart', 'touchend', 'touchmove', 'touchcancel');
         return result.join(' ');
     }
 
