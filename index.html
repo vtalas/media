@@ -43,7 +43,7 @@
             right: 0;
             top: 0;
             border: 1px solid red;
-            height: 100%;
+            height: 120%;
         }
     </style>
 </head>
@@ -62,13 +62,23 @@
 <h5>Device info:</h5>
 <div class="log"></div>
 
-
 <div class="events"></div>
-<div class="eventslog" >
-
-</div>
+<div class="eventslog"></div>
 
 <script>
+    function hideAddressBar()
+    {
+        if(!window.location.hash)
+        {
+            if(document.height < window.outerHeight)
+            {
+                document.body.style.height = (window.outerHeight + 50) + 'px';
+            }
+
+            setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+        }
+    }
+
 
     var mm = {};
     var media;
@@ -110,11 +120,15 @@
         });
     };
 
-    var cleatButton = function (el) {
-        $("<button/>").text('clear').on('click', function () {
-            Logger.clear(el);
-            cleatButton(el);
-        }).appendTo(el);
+    var clearButton = function (el) {
+        $('<button>').text('clear').on('click', function () {
+//            Logger.clear(el);
+            hideAddressBar();
+        }).css({
+            position:'absolute',
+            top:0,
+            right: 0
+        }).appendTo('body');
     };
 
     $(document).ready(function() {
@@ -123,8 +137,9 @@
         Logger.logBasicInfo();
 
         var eventslog = $('.eventslog');
-        cleatButton(eventslog);
+        clearButton(eventslog);
         events().bindAll($('.events'), function (e) {
+            console.log(e);
             Logger.log(e.type, eventslog);
         })
     })

@@ -18,5 +18,4 @@ events = function () {
             element.bind(getAllEvents(element[0]), callback);
         }
     };
-
 }
