@@ -85,7 +85,12 @@
 
     var steps = [
 //        { maxWidth: 500, className: 'media-red', minWidth: 0 },
-//        { maxWidth: 1000, className: 'media-blue', minWidth: 501 }
+        {
+            maxDeviceWidth: '800px', maxDeviceHeight: '800px',
+            options: {
+                className: 'media-red', type: 'tablet'
+            }
+        },
         {
             maxDeviceWidth: '400px', maxDeviceHeight: '400px',
             options: {
@@ -109,7 +114,7 @@
         }
 
         $('input').on('change', function() {
-        	media.destroy();
+            media.destroy();
             createMedia();
             Logger.logBasicInfo();
         })
