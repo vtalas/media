@@ -4,24 +4,25 @@ mm.Media = {
 
         this.options = options || {};
         this.listeners = [];
+        this.matched = {};
 
         var opt = this.options;
 
         var steps = opt.steps;
         opt.onChange = opt.onChange || function() {
             };
+
         opt.log = opt.log || function() {
             };
 
-        var toMediaString = function(step, ratio) {
+        var toMediaString = function(step) {
             var mediaString = [];
 
             _.each(step, function(value, key) {
-                if (key !== 'className') {
-                    mediaString.push('(' + _.kebabCase(key) + ': ' + value + 'px)')
+                if (key !== 'options') {
+                    mediaString.push('(' + _.kebabCase(key) + ': ' + value + ')');
                 }
             });
-
             return mediaString.join(' and ');
         };
 
@@ -35,27 +36,30 @@ mm.Media = {
 
             var step = steps[i];
             var matchMedia = window.matchMedia(toMediaString(step, ratio));
-
-            opt.log(step.className + ':  ' + matchMedia.media);
-            if (matchMedia.matches) {
-                opt.onChange(step, matchMedia);
-            }
-
+            opt.log(step.options.className + ':  ' + matchMedia.media);
+            this.onChange(step, matchMedia);
             this.attach(step, matchMedia);
         }
         return this;
 
     },
 
+    isMobile: function() {
+        return !!this.matched['mobile'];
+    },
+
     attach: function(step, matchMedia) {
 
-        var mediaChanged = this.options.onChange;
-        var handler = function(media) {
-            console.log(media.media);
-            mediaChanged(step, media)
-        };
+        var handler = _.bind(this.onChange, this, step);
         this.listeners.push({ media: matchMedia, handler: handler });
         matchMedia.addListener(handler);
+    },
+
+
+    onChange: function(step, matchMedia) {
+
+        this.matched[step.options.type] = matchMedia.matches;
+        this.options.onChange(step, matchMedia);
     },
 
     destroy: function() {

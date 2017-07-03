@@ -37,6 +37,7 @@
             background-color: #6cff46;
             border-radius: 50%;
         }
+
         .eventslog {
             position: absolute;
             width: 150px;
@@ -66,16 +67,15 @@
 <div class="eventslog"></div>
 
 <script>
-    function hideAddressBar()
-    {
-        if(!window.location.hash)
-        {
-            if(document.height < window.outerHeight)
-            {
+    function hideAddressBar() {
+        if (!window.location.hash) {
+            if (document.height < window.outerHeight) {
                 document.body.style.height = (window.outerHeight + 50) + 'px';
             }
 
-            setTimeout( function(){ window.scrollTo(0, 1); }, 50 );
+            setTimeout(function() {
+                window.scrollTo(0, 1);
+            }, 50);
         }
     }
 
@@ -86,7 +86,12 @@
     var steps = [
 //        { maxWidth: 500, className: 'media-red', minWidth: 0 },
 //        { maxWidth: 1000, className: 'media-blue', minWidth: 501 }
-        { maxDeviceWidth: 400, className: 'media-blue', maxDeviceHeight: 600 }
+        {
+            maxDeviceWidth: '400px', maxDeviceHeight: '400px',
+            options: {
+                className: 'media-blue', type: 'mobile'
+            }
+        }
     ];
 
     var render = function(steps) {
@@ -114,19 +119,19 @@
         media = mm.Media.initialize({
             steps: steps,
             onChange: function(step, media) {
-                $('body').toggleClass(step.className, media.matches)
+                $('body').toggleClass(step.options.className, media.matches)
             },
             log: Logger.log
         });
     };
 
-    var clearButton = function (el) {
-        $('<button>').text('clear').on('click', function () {
+    var clearButton = function(el) {
+        $('<button>').text('clear').on('click', function() {
 //            Logger.clear(el);
             hideAddressBar();
         }).css({
-            position:'absolute',
-            top:0,
+            position: 'absolute',
+            top: 0,
             right: 0
         }).appendTo('body');
     };
@@ -138,7 +143,7 @@
 
         var eventslog = $('.eventslog');
         clearButton(eventslog);
-        events().bindAll($('.events'), function (e) {
+        events().bindAll($('.events'), function(e) {
             console.log(e);
             Logger.log(e.type, eventslog);
         })
